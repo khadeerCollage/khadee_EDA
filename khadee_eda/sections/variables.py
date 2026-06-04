@@ -100,7 +100,7 @@ def _numeric_card(col, series, style=""):
     html += '</div>'
 
     # Tabs container
-    html += '<div class="tab-container" style="margin-top: 1.5rem;">'
+    html += '<div class="tab-container variable-tabs" style="margin-top: 1.5rem;">'
     html += '<div class="tab-buttons">'
     html += f'<button class="tab-btn active" onclick="switchTab(this, \'tab-stats-{col_id}\')">Stats</button>'
     html += f'<button class="tab-btn" onclick="switchTab(this, \'tab-hist-{col_id}\')">Histogram</button>'

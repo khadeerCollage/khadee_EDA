@@ -1177,3 +1177,160 @@ td.warning { color: var(--warning); font-weight: 600; }
         grid-template-columns: 1fr;
     }
 }
+
+/* ── Floating Actions ───────────────────────────────────── */
+.floating-actions {
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
+    z-index: 1000;
+}
+
+.floating-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    border: none;
+    color: white;
+    padding: 0.85rem 1.5rem;
+    border-radius: 99px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    box-shadow: 0 8px 24px rgba(59, 130, 246, 0.4);
+    cursor: pointer;
+    transition: var(--transition);
+    backdrop-filter: blur(10px);
+}
+
+.floating-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 32px rgba(59, 130, 246, 0.6);
+}
+
+.floating-btn:active {
+    transform: translateY(-1px);
+}
+
+@media (max-width: 900px) {
+    .floating-actions {
+        bottom: 1.5rem;
+        right: 1.5rem;
+    }
+}
+
+/* ── Print / PDF Stylesheet ──────────────────────────────── */
+@media print {
+    :root {
+        --bg-dark: #ffffff !important;
+        --bg-darker: #ffffff !important;
+        --bg-card: #ffffff !important;
+        --text-primary: #1e293b !important;
+        --text-secondary: #475569 !important;
+        --text-muted: #64748b !important;
+        --border: #cbd5e1 !important;
+    }
+
+    body {
+        background: #ffffff !important;
+        color: #1e293b !important;
+    }
+
+    body::before {
+        display: none !important;
+    }
+
+    .main-content {
+        margin-left: 0 !important;
+        padding: 0.5in !important;
+        width: 100% !important;
+        background: #ffffff !important;
+    }
+
+    .sidebar,
+    .mobile-menu-btn,
+    .floating-actions,
+    .code-copy-btn,
+    .variables-selector-card {
+        display: none !important;
+    }
+
+    .card,
+    .stat-card,
+    .variable-card,
+    .stats-table-wrapper,
+    .pipeline-step,
+    .suggestion-card,
+    .pipeline-code-block {
+        background: #ffffff !important;
+        border: 1px solid #cbd5e1 !important;
+        box-shadow: none !important;
+        color: #1e293b !important;
+        page-break-inside: avoid;
+        break-inside: avoid;
+        margin-bottom: 1.5rem !important;
+    }
+
+    .report-section {
+        opacity: 1 !important;
+        transform: none !important;
+        page-break-after: always;
+        break-after: page;
+    }
+
+    .report-title {
+        background: none !important;
+        -webkit-text-fill-color: initial !important;
+        color: #0f172a !important;
+    }
+
+    /* General tab content expansion for PDF footprint */
+    .tab-content {
+        display: block !important;
+        opacity: 1 !important;
+        visibility: visible !important;
+    }
+
+    /* Variables print grid (2x2 chart layout under stats) */
+    .variable-tabs {
+        display: flex !important;
+        flex-wrap: wrap !important;
+        gap: 1rem !important;
+    }
+
+    .variable-tabs .tab-content {
+        flex: 1 1 45% !important;
+        min-width: 45% !important;
+        page-break-inside: avoid;
+        break-inside: avoid;
+    }
+
+    /* Force the stats tab (Overview + Tables) to take full width */
+    .variable-tabs .tab-content[id^="tab-stats-"] {
+        flex: 1 1 100% !important;
+        min-width: 100% !important;
+    }
+
+    .variable-card {
+        display: block !important;
+        opacity: 1 !important;
+        visibility: visible !important;
+        page-break-inside: avoid;
+        break-inside: avoid;
+        margin-bottom: 2rem !important;
+    }
+
+    /* Hide selector elements since all cards are now printed sequentially */
+    .tab-buttons,
+    #variables-select {
+        display: none !important;
+    }
+
+    /* Make sure Plotly charts behave inside standard page dimensions */
+    .plotly-chart {
+        max-width: 100% !important;
+        height: auto !important;
+    }
+}
+

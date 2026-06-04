@@ -91,6 +91,14 @@ def render_html(title, sections_html, sections_list):
     <!-- Mobile menu toggle -->
     <button class="mobile-menu-btn" id="mobile-menu-btn" onclick="toggleSidebar()">☰</button>
 
+    <!-- Floating PDF download button -->
+    <div class="floating-actions">
+        <button class="floating-btn" onclick="window.print()" title="Download PDF Report">
+            <span>📥</span>
+            <span>Download PDF</span>
+        </button>
+    </div>
+
     <script>
 {js}
     </script>

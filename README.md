@@ -150,6 +150,7 @@ report = ProfileReport(
 ## 💎 Design & Visual Performance Excellence
 
 * **Glassmorphism Dark Theme**: Standard EDA reports often look like boring 2010 tables. `khadee-eda` features a high-end, dark glassmorphism dashboard with neon accents, dynamic hover states, and smooth CSS micro-animations.
+* **Instant PDF Export**: Features a beautiful floating "Download PDF" button that triggers browser printing. The custom media print styles automatically expand all hidden column cards, expand all tabs, hide navigational elements/dropdowns, and switch to a crisp ink-saving light template for a clean, professional corporate report.
 * **WebGL Crash Mitigation**: Rendering dozens of ScatterGL plots on a single page causes modern browsers to exceed their WebGL context limit, crash, and display blank charts. `khadee-eda` compiles Scatter plots to optimized vector SVG path strings, ensuring **100% chart rendering reliability** without sacrificing interactive zoom or hover features.
 * **Smart Dropdown Selectors**: Instead of scrolling endlessly through dozens of columns, the report includes a dynamic select element to view one variable card at a time, instantly resizing the embedded Plotly chart to prevent layout distortions.
 * **Copyable Preprocessing Recommender**: When the library suggests cleaning operations (e.g., standardizing headers or imputing values), it displays a syntax-highlighted code block with a one-click copy button, generating context-aware code ready for your pipeline.
