@@ -11,24 +11,28 @@ from scipy import stats as scipy_stats
 
 def pearson_correlation(df, numeric_cols):
     """Compute Pearson correlation matrix for numeric columns."""
-    if len(numeric_cols) < 2:
+    # Filter out zero-variance columns to prevent numpy divide-by-zero warnings
+    valid_cols = [c for c in numeric_cols if df[c].nunique() > 1]
+    if len(valid_cols) < 2:
         return pd.DataFrame()
-    return df[numeric_cols].corr(method="pearson")
+    return df[valid_cols].corr(method="pearson")
 
 
 def spearman_correlation(df, numeric_cols):
     """Compute Spearman rank correlation matrix."""
-    if len(numeric_cols) < 2:
+    valid_cols = [c for c in numeric_cols if df[c].nunique() > 1]
+    if len(valid_cols) < 2:
         return pd.DataFrame()
-    return df[numeric_cols].corr(method="spearman")
+    return df[valid_cols].corr(method="spearman")
 
 
 def kendall_correlation(df, numeric_cols):
     """Compute Kendall Tau correlation matrix."""
-    if len(numeric_cols) < 2:
+    valid_cols = [c for c in numeric_cols if df[c].nunique() > 1]
+    if len(valid_cols) < 2:
         return pd.DataFrame()
     # Kendall can be slow, sample if needed
-    sample = df[numeric_cols]
+    sample = df[valid_cols]
     if len(sample) > 5000:
         sample = sample.sample(5000, random_state=42)
     return sample.corr(method="kendall")
