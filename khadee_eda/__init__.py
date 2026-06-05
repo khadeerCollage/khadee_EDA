@@ -33,7 +33,7 @@ Sub-modules
     from khadee_eda.engines import stats_engine, correlation_engine, missing_engine, outlier_engine
 """
 
-__version__ = "1.0.0"
+__version__ = "1.0.1"
 __author__ = "Khadee"
 
 import sys
