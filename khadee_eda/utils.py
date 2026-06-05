@@ -128,3 +128,39 @@ def check_item(passed, label):
     icon = "✅" if passed else "❌"
     cls = "check-pass" if passed else "check-fail"
     return f'<div class="check-item {cls}">{icon} {safe_str(label)}</div>'
+
+
+def optimize_dataframe(df):
+    """
+    Optimizes memory footprint of a pandas DataFrame by downcasting numeric columns
+    and converting low-cardinality object/string columns to category.
+    """
+    import pandas as pd
+    df = df.copy()
+    
+    # Track initial memory for logging if needed
+    for col in df.columns:
+        # Ignore empty/all-NaN columns
+        if df[col].isna().all():
+            continue
+            
+        col_type = df[col].dtype
+        
+        # Optimize integers
+        if pd.api.types.is_integer_dtype(df[col]):
+            df[col] = pd.to_numeric(df[col], downcast='integer')
+        # Optimize floats
+        elif pd.api.types.is_float_dtype(df[col]):
+            df[col] = pd.to_numeric(df[col], downcast='float')
+        # Optimize strings / objects
+        elif pd.api.types.is_object_dtype(df[col]) or pd.api.types.is_string_dtype(df[col]):
+            try:
+                n_rows = len(df[col])
+                n_unique = df[col].nunique()
+                # If unique values < 100 or unique values make up less than 5% of dataset, cast to category
+                if n_unique < 100 or (n_rows > 0 and n_unique / n_rows < 0.05):
+                    df[col] = df[col].astype('category')
+            except Exception:
+                pass
+                
+    return df

@@ -112,7 +112,13 @@ def _run_checks(df, type_map):
     # No extreme multicollinearity
     numeric_cols = get_columns_by_type(type_map, ColumnType.NUMERIC)
     if len(numeric_cols) >= 2:
-        corr = df[numeric_cols].corr().abs()
+        df_corr = df[numeric_cols]
+        if len(df_corr) > 50000:
+            df_corr = df_corr.sample(50000, random_state=42)
+        import warnings
+        with warnings.catch_warnings():
+            warnings.simplefilter("ignore", category=RuntimeWarning)
+            corr = df_corr.corr().abs()
         np.fill_diagonal(corr.values, 0)
         max_corr = corr.max().max()
         results["no_multicollinearity"] = {
@@ -142,9 +148,13 @@ def _run_checks(df, type_map):
         for col in numeric_cols:
             clean = pd.to_numeric(df[col], errors="coerce").dropna()
             if len(clean) > 0:
-                q1, q3 = clean.quantile([0.25, 0.75])
+                if len(clean) > 50000:
+                    clean_sampled = clean.sample(50000, random_state=42)
+                else:
+                    clean_sampled = clean
+                q1, q3 = clean_sampled.quantile([0.25, 0.75])
                 iqr = q3 - q1
-                outlier_pct = ((clean < q1 - 1.5 * iqr) | (clean > q3 + 1.5 * iqr)).mean()
+                outlier_pct = ((clean_sampled < q1 - 1.5 * iqr) | (clean_sampled > q3 + 1.5 * iqr)).mean()
                 if outlier_pct > 0.05:
                     high_outlier_cols += 1
         results["low_outlier_ratio"] = {

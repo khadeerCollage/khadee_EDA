@@ -36,6 +36,10 @@ def _plotly_div(fig_json, chart_id, height=None):
 
 def histogram_chart(series, chart_id, title="", bins=None):
     """Generate a histogram with KDE overlay."""
+    # Sample series for plotting performance
+    if len(series) > 10000:
+        series = series.sample(10000, random_state=42)
+
     if bins is None:
         bins = min(HISTOGRAM_BINS, max(10, len(series) // 20))
 
@@ -75,20 +79,25 @@ def histogram_grid(series_list, col_names, chart_id):
         "showlegend": False,
     }}
 
-    # Use subplots via domain with generous padding
+    # Use subplots via domain with generous padding and explicit anchoring
     for i, (series, name) in enumerate(zip(series_list, col_names)):
         row = i // cols
         col = i % cols
         
-        # Add significant padding to prevent overlapping labels
-        x_domain = [col / cols + 0.05, (col + 1) / cols - 0.02]
-        y_domain = [1 - (row + 1) / rows + 0.16, 1 - row / rows - 0.02]
+        # Proportional positioning with safety margins to prevent overlapping
+        col_width = 1.0 / cols
+        margin_x = col_width * 0.15
+        x_domain = [col * col_width + margin_x, (col + 1) * col_width - (margin_x * 0.2)]
+
+        row_height = 1.0 / rows
+        margin_y = row_height * 0.25
+        y_domain = [1 - (row + 1) * row_height + margin_y, 1 - row * row_height - (margin_y * 0.2)]
 
         axis_num = "" if i == 0 else str(i + 1)
 
         fig["data"].append({
             "type": "histogram",
-            "x": series.values.tolist()[:5000],
+            "x": series.iloc[:2000].values.tolist(),
             "nbinsx": 20,
             "marker": {"color": [COLORS["primary"], COLORS["secondary"], COLORS["accent"],
                                  COLORS["success"], COLORS["info"]][i % 5], "opacity": 0.7},
@@ -99,13 +108,17 @@ def histogram_grid(series_list, col_names, chart_id):
 
         fig["layout"][f"xaxis{axis_num}"] = {
             "domain": x_domain, 
+            "anchor": f"y{axis_num}",  # Anchor to this subplot's y-axis
             "title": name[:20], 
-            "titlefont": {"size": 12},
+            "titlefont": {"size": 11},
+            "tickfont": {"size": 9},
             "gridcolor": "rgba(99,102,241,0.1)",
         }
         fig["layout"][f"yaxis{axis_num}"] = {
             "domain": y_domain, 
+            "anchor": f"x{axis_num}",  # Anchor to this subplot's x-axis
             "title": "",
+            "tickfont": {"size": 9},
             "gridcolor": "rgba(99,102,241,0.1)",
         }
 
@@ -117,7 +130,7 @@ def box_plot(series, chart_id, title=""):
     fig = {
         "data": [{
             "type": "box",
-            "y": series.values.tolist()[:10000],
+            "y": series.iloc[:2000].values.tolist(),
             "marker": {"color": COLORS["accent"]},
             "line": {"color": COLORS["accent"]},
             "fillcolor": f"{COLORS['accent']}30",
@@ -147,7 +160,7 @@ def box_plot_multi(series_list, col_names, chart_id):
     for i, (series, name) in enumerate(zip(series_list, col_names)):
         fig["data"].append({
             "type": "box",
-            "y": series.values.tolist()[:5000],
+            "y": series.iloc[:2000].values.tolist(),
             "name": name[:15],
             "marker": {"color": colors[i % len(colors)]},
             "boxpoints": "outliers",
@@ -271,6 +284,12 @@ def heatmap_chart(corr_df, chart_id, title=""):
 
 def scatter_plot(x_series, y_series, x_name, y_name, chart_id, title=""):
     """Generate a scatter plot."""
+    # Ensure scatter plot has at most 2000 points
+    if len(x_series) > 2000:
+        idx = x_series.sample(2000, random_state=42).index
+        x_series = x_series.loc[idx]
+        y_series = y_series.loc[idx]
+
     fig = {
         "data": [{
             "type": "scatter",
@@ -307,7 +326,7 @@ def grouped_box_plot(df, num_col, cat_col, chart_id, title=""):
         vals = pd.to_numeric(df.loc[mask, num_col], errors="coerce").dropna()
         fig["data"].append({
             "type": "box",
-            "y": vals.values.tolist()[:2000],
+            "y": vals.iloc[:2000].values.tolist(),
             "name": str(group)[:15],
             "marker": {"color": colors[i % len(colors)]},
         })
@@ -452,11 +471,15 @@ def cluster_scatter(kmeans_result, chart_id):
 def qq_plot(series, chart_id, title=""):
     """Generate a QQ plot."""
     from scipy import stats as scipy_stats
-    clean = series.dropna().values
-    if len(clean) < 3:
+    clean = series.dropna()
+    if len(clean) > 1000:
+        clean = clean.sample(1000, random_state=42)
+    
+    clean_vals = clean.values
+    if len(clean_vals) < 3:
         return '<p class="empty-message">Not enough data for QQ plot.</p>'
 
-    (osm, osr), (slope, intercept, r) = scipy_stats.probplot(clean, dist="norm")
+    (osm, osr), (slope, intercept, r) = scipy_stats.probplot(clean_vals, dist="norm")
 
     fig = {
         "data": [
@@ -490,7 +513,7 @@ def violin_plot(series, chart_id, title=""):
     fig = {
         "data": [{
             "type": "violin",
-            "y": series.values.tolist()[:5000],
+            "y": series.iloc[:2000].values.tolist(),
             "box": {"visible": True},
             "meanline": {"visible": True},
             "fillcolor": f"{COLORS['secondary']}60",
@@ -514,8 +537,15 @@ def kde_plot(series, chart_id, title=""):
 
     try:
         values = clean.values.astype(float)
-        kde = scipy_stats.gaussian_kde(values)
-        x_min, x_max = values.min(), values.max()
+        # Sample to speed up KDE fitting on large arrays
+        if len(values) > 5000:
+            rng = np.random.RandomState(42)
+            values_sampled = rng.choice(values, 5000, replace=False)
+        else:
+            values_sampled = values
+            
+        kde = scipy_stats.gaussian_kde(values_sampled)
+        x_min, x_max = values_sampled.min(), values_sampled.max()
         x_grid = np.linspace(x_min, x_max, 200)
         y_grid = kde(x_grid)
 

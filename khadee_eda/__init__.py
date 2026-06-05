@@ -33,7 +33,7 @@ Sub-modules
     from khadee_eda.engines import stats_engine, correlation_engine, missing_engine, outlier_engine
 """
 
-__version__ = "1.0.2"
+__version__ = "1.0.3"
 __author__ = "Khadee"
 
 import sys
@@ -50,7 +50,8 @@ def _print(msg):
     except UnicodeEncodeError:
         print(msg.encode("ascii", errors="replace").decode("ascii"))
 
-from .config import ALL_SECTIONS, ALL_TECHNIQUES
+
+from .config import ALL_SECTIONS, ALL_TECHNIQUES, LARGE_DATASET_ROWS, SAMPLE_SIZE
 from .loader import load_dataset
 from .type_detector import detect_types
 from .renderers.html_renderer import render_html
@@ -60,29 +61,6 @@ from . import clean
 class ProfileReport:
     """
     Generate a comprehensive EDA profiling report.
-
-    Parameters
-    ----------
-    source : str or pd.DataFrame
-        File path (auto-detects format from extension) or pandas DataFrame.
-    title : str, optional
-        Report title. Default: "Khadee EDA Report".
-    sections : list, optional
-        List of section IDs to include. Default: all 10 sections.
-        Options: overview, variables, distributions, correlations, missing,
-                 outliers, interactions, advanced_stats, model_readiness, sample
-    techniques : list, optional
-        List of technique IDs for the Advanced Statistics section.
-        Default: all 4 techniques.
-        Options: us, india, japan, china
-    **kwargs : dict
-        Extra arguments passed to the file reader (e.g., sheet_name for Excel).
-
-    Examples
-    --------
-    >>> from khadee_eda import ProfileReport
-    >>> report = ProfileReport("train.csv", title="Profiling Report")
-    >>> report.to_html("report.html")
     """
 
     def __init__(self, source, title="Khadee EDA Report", sections=None,
@@ -91,6 +69,8 @@ class ProfileReport:
         self.sections = sections or ALL_SECTIONS
         self.techniques = techniques or ALL_TECHNIQUES
         self._start_time = time.time()
+
+        from .utils import optimize_dataframe
 
         # Validate sections
         for s in self.sections:
@@ -110,6 +90,17 @@ class ProfileReport:
         _print("[*] Khadee EDA -- Loading dataset...")
         self.df, self.metadata = load_dataset(source, **kwargs)
         _print(f"   [+] Loaded: {self.df.shape[0]:,} rows x {self.df.shape[1]:,} columns")
+
+        # Optimize memory usage
+        self.df = optimize_dataframe(self.df)
+
+        # Smart downsampling for heavy computations
+        self.is_large_dataset = len(self.df) > LARGE_DATASET_ROWS
+        if self.is_large_dataset:
+            _print(f"   [!] Large dataset detected (> {LARGE_DATASET_ROWS:,} rows). Sampling {SAMPLE_SIZE:,} rows for heavy computations...")
+            self.df_sampled = self.df.sample(SAMPLE_SIZE, random_state=42)
+        else:
+            self.df_sampled = self.df
 
         # Detect types
         _print("   [*] Detecting column types...")
@@ -135,13 +126,13 @@ class ProfileReport:
                 self.df, self.type_map, self.metadata, self._start_time
             ),
             "variables": lambda: variables.generate(self.df, self.type_map),
-            "distributions": lambda: distributions.generate(self.df, self.type_map),
-            "correlations": lambda: correlations.generate(self.df, self.type_map),
+            "distributions": lambda: distributions.generate(self.df_sampled, self.type_map),
+            "correlations": lambda: correlations.generate(self.df_sampled, self.type_map),
             "missing": lambda: missing.generate(self.df, self.type_map),
-            "outliers": lambda: outliers.generate(self.df, self.type_map),
-            "interactions": lambda: interactions.generate(self.df, self.type_map),
+            "outliers": lambda: outliers.generate(self.df_sampled, self.type_map),
+            "interactions": lambda: interactions.generate(self.df_sampled, self.type_map),
             "advanced_stats": lambda: advanced_stats.generate(
-                self.df, self.type_map, self.techniques
+                self.df_sampled, self.type_map, self.techniques
             ),
             "model_readiness": lambda: model_readiness.generate(self.df, self.type_map),
             "model_suggestion": lambda: model_suggestion.generate(self.df, self.type_map),

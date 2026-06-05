@@ -63,7 +63,10 @@ def missing_correlation(df):
         return pd.DataFrame()
 
     miss_indicators = df[missing_cols].isna().astype(int)
-    return miss_indicators.corr()
+    import warnings
+    with warnings.catch_warnings():
+        warnings.simplefilter("ignore", category=RuntimeWarning)
+        return miss_indicators.corr()
 
 
 def imputation_recommendations(df, type_map):
@@ -147,18 +150,27 @@ def _estimate_missingness_type(df, col, n_miss, n_rows):
     elif pct > 0.50:
         return "Investigate — high rate"
 
+    # Sample for performance if large
+    if len(df) > 20000:
+        df_sample = df.sample(20000, random_state=42)
+    else:
+        df_sample = df
+
     # Check if missing pattern correlates with other columns
-    miss_indicator = df[col].isna().astype(int)
-    numeric_cols = df.select_dtypes(include=[np.number]).columns.tolist()
+    miss_indicator = df_sample[col].isna().astype(int)
+    numeric_cols = df_sample.select_dtypes(include=[np.number]).columns.tolist()
     numeric_cols = [c for c in numeric_cols if c != col]
 
     if len(numeric_cols) > 0:
         correlations = []
         for other_col in numeric_cols[:10]:  # Check up to 10 columns
             try:
-                valid_mask = df[other_col].notna()
+                valid_mask = df_sample[other_col].notna()
                 if valid_mask.sum() > 10:
-                    corr = abs(miss_indicator[valid_mask].corr(df[other_col][valid_mask]))
+                    import warnings
+                    with warnings.catch_warnings():
+                        warnings.simplefilter("ignore", category=RuntimeWarning)
+                        corr = abs(miss_indicator[valid_mask].corr(df_sample[other_col][valid_mask]))
                     if not np.isnan(corr):
                         correlations.append(corr)
             except Exception:

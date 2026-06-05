@@ -28,6 +28,10 @@ def pca_analysis(df, numeric_cols, n_components=None):
     data = df[numeric_cols].copy()
     data = data.fillna(data.median())
 
+    # Sample for performance if large
+    if len(data) > 20000:
+        data = data.sample(20000, random_state=42)
+
     # Standardize
     scaler = StandardScaler()
     scaled = scaler.fit_transform(data)
@@ -49,7 +53,7 @@ def pca_analysis(df, numeric_cols, n_components=None):
         "cumulative_variance": cum_var.tolist(),
         "n_components_95": n_95,
         "n_features": len(numeric_cols),
-        "components_2d": transformed[:, :2].tolist() if transformed.shape[1] >= 2 else [],
+        "components_2d": [],  # Removed list-of-lists conversion since it is unused
     }
 
 
@@ -114,7 +118,7 @@ def hopkins_statistic(df, numeric_cols, sample_size=None):
 
     n = len(data)
     if sample_size is None:
-        sample_size = min(n, max(10, n // 10))
+        sample_size = min(n, 1000)
 
     if n < 10:
         return 0.5

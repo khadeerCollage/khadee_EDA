@@ -11,31 +11,64 @@ from scipy import stats as scipy_stats
 
 def pearson_correlation(df, numeric_cols):
     """Compute Pearson correlation matrix for numeric columns."""
-    # Filter out zero-variance columns to prevent numpy divide-by-zero warnings
-    valid_cols = [c for c in numeric_cols if df[c].nunique() > 1]
+    # Filter out zero-variance/constant columns to prevent divide-by-zero warnings
+    valid_cols = []
+    for c in numeric_cols:
+        try:
+            col_std = df[c].std(ddof=1)
+            if pd.notna(col_std) and col_std > 1e-9 and df[c].nunique() > 1:
+                valid_cols.append(c)
+        except Exception:
+            pass
     if len(valid_cols) < 2:
         return pd.DataFrame()
-    return df[valid_cols].corr(method="pearson")
+        
+    import warnings
+    with warnings.catch_warnings():
+        warnings.simplefilter("ignore", category=RuntimeWarning)
+        return df[valid_cols].corr(method="pearson")
 
 
 def spearman_correlation(df, numeric_cols):
     """Compute Spearman rank correlation matrix."""
-    valid_cols = [c for c in numeric_cols if df[c].nunique() > 1]
+    valid_cols = []
+    for c in numeric_cols:
+        try:
+            col_std = df[c].std(ddof=1)
+            if pd.notna(col_std) and col_std > 1e-9 and df[c].nunique() > 1:
+                valid_cols.append(c)
+        except Exception:
+            pass
     if len(valid_cols) < 2:
         return pd.DataFrame()
-    return df[valid_cols].corr(method="spearman")
+        
+    import warnings
+    with warnings.catch_warnings():
+        warnings.simplefilter("ignore", category=RuntimeWarning)
+        return df[valid_cols].corr(method="spearman")
 
 
 def kendall_correlation(df, numeric_cols):
     """Compute Kendall Tau correlation matrix."""
-    valid_cols = [c for c in numeric_cols if df[c].nunique() > 1]
+    valid_cols = []
+    for c in numeric_cols:
+        try:
+            col_std = df[c].std(ddof=1)
+            if pd.notna(col_std) and col_std > 1e-9 and df[c].nunique() > 1:
+                valid_cols.append(c)
+        except Exception:
+            pass
     if len(valid_cols) < 2:
         return pd.DataFrame()
     # Kendall can be slow, sample if needed
     sample = df[valid_cols]
     if len(sample) > 5000:
         sample = sample.sample(5000, random_state=42)
-    return sample.corr(method="kendall")
+        
+    import warnings
+    with warnings.catch_warnings():
+        warnings.simplefilter("ignore", category=RuntimeWarning)
+        return sample.corr(method="kendall")
 
 
 def cramers_v_matrix(df, categorical_cols):
