@@ -7,6 +7,9 @@
 
 `khadee-eda` is a next-generation, high-performance exploratory data analysis (EDA) and data cleaning library. It generates **stunning, glassmorphism-themed interactive HTML profiling reports** from any dataset and provides a robust, lightweight suite of cleaning tools equivalent to `dataprep.clean`.
 
+> [!TIP]
+> **Learning Data Science & EDA?** We have created a comprehensive, beginner-friendly **[Learning & Reference Guide](file:///c:/Users/USER/Desktop/khadee_EDA/LEARNING_GUIDE.md)** explaining all standard library functions (NumPy, Pandas, SciPy, Scikit-Learn) and advanced regional statistics used in this project!
+
 ---
 
 ## ⚡ Quick Start
