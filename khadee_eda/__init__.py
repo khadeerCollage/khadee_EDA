@@ -127,7 +127,7 @@ class ProfileReport:
         from .sections import (
             overview, variables, distributions, correlations,
             missing, outliers, interactions, advanced_stats,
-            model_readiness, sample,
+            model_readiness, model_suggestion, sample,
         )
 
         section_generators = {
@@ -144,6 +144,7 @@ class ProfileReport:
                 self.df, self.type_map, self.techniques
             ),
             "model_readiness": lambda: model_readiness.generate(self.df, self.type_map),
+            "model_suggestion": lambda: model_suggestion.generate(self.df, self.type_map),
             "sample": lambda: sample.generate(self.df, self.type_map),
         }
 

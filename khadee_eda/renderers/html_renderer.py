@@ -110,7 +110,7 @@ def render_html(title, sections_html, sections_list):
 
 def _build_nav(sections_list):
     """Build sidebar navigation links."""
-    nav = ""
+    nav = '<a class="nav-link active" href="#" data-section="all">🌍 Dashboard (All)</a>\n'
     for section_id in sections_list:
         label = SECTION_LABELS.get(section_id, section_id.replace("_", " ").title())
         nav += f'<a class="nav-link" href="#section-{section_id}" data-section="{section_id}">{label}</a>\n'

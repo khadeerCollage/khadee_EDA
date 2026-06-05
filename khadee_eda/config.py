@@ -16,6 +16,7 @@ ALL_SECTIONS = [
     "interactions",
     "advanced_stats",
     "model_readiness",
+    "model_suggestion",
     "sample",
 ]
 
@@ -29,6 +30,7 @@ SECTION_LABELS = {
     "interactions": "🔄 Interactions",
     "advanced_stats": "📐 Advanced Statistics",
     "model_readiness": "🤖 Model Readiness",
+    "model_suggestion": "🎯 Model Suggestion",
     "sample": "📋 Sample & Duplicates",
 }
 

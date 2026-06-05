@@ -63,21 +63,26 @@ def histogram_chart(series, chart_id, title="", bins=None):
 def histogram_grid(series_list, col_names, chart_id):
     """Generate a grid of small histograms."""
     n = len(series_list)
-    cols = min(4, n)
+    cols = min(3, n)
     rows = (n + cols - 1) // cols
+
+    # Calculate optimal height based on rows
+    total_height = max(400, rows * 280)
 
     fig = {"data": [], "layout": {
         "title": {"text": "", "font": {"size": 14}},
-        "height": max(300, rows * 200),
+        "height": total_height,
         "showlegend": False,
     }}
 
-    # Use subplots via domain
+    # Use subplots via domain with generous padding
     for i, (series, name) in enumerate(zip(series_list, col_names)):
         row = i // cols
         col = i % cols
-        x_domain = [col / cols + 0.02, (col + 1) / cols - 0.02]
-        y_domain = [1 - (row + 1) / rows + 0.05, 1 - row / rows - 0.05]
+        
+        # Add significant padding to prevent overlapping labels
+        x_domain = [col / cols + 0.05, (col + 1) / cols - 0.02]
+        y_domain = [1 - (row + 1) / rows + 0.16, 1 - row / rows - 0.02]
 
         axis_num = "" if i == 0 else str(i + 1)
 
@@ -93,15 +98,18 @@ def histogram_grid(series_list, col_names, chart_id):
         })
 
         fig["layout"][f"xaxis{axis_num}"] = {
-            "domain": x_domain, "title": name[:15], "titlefont": {"size": 10},
+            "domain": x_domain, 
+            "title": name[:20], 
+            "titlefont": {"size": 12},
             "gridcolor": "rgba(99,102,241,0.1)",
         }
         fig["layout"][f"yaxis{axis_num}"] = {
-            "domain": y_domain, "title": "",
+            "domain": y_domain, 
+            "title": "",
             "gridcolor": "rgba(99,102,241,0.1)",
         }
 
-    return _plotly_div(json.dumps(fig, default=str), chart_id, height=max(350, rows * 200))
+    return _plotly_div(json.dumps(fig, default=str), chart_id, height=total_height)
 
 
 def box_plot(series, chart_id, title=""):

@@ -26,10 +26,10 @@ def generate(df, type_map, techniques=None):
     }
 
     labels = {
-        "us": "🇺🇸 US",
-        "india": "🇮🇳 India",
-        "japan": "🇯🇵 Japan",
-        "china": "🇨🇳 China",
+        "us": "ML-Readiness & Feature Engineering",
+        "india": "Statistical Foundation & Hypothesis Testing",
+        "japan": "Quality Control & Process Analytics",
+        "china": "Large-Scale Pattern Recognition",
     }
 
     for tech in techniques:

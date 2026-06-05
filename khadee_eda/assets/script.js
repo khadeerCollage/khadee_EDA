@@ -7,48 +7,47 @@
     const navLinks = document.querySelectorAll('.nav-link');
     const sections = document.querySelectorAll('.report-section');
 
-    // Smooth scroll on nav click
+    // Tab isolation / Dashboard logic on nav click
     navLinks.forEach(link => {
         link.addEventListener('click', function(e) {
             e.preventDefault();
-            const targetId = this.getAttribute('href').substring(1);
-            const target = document.getElementById(targetId);
-            if (target) {
-                target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            
+            // Set active class on nav
+            navLinks.forEach(l => l.classList.remove('active'));
+            this.classList.add('active');
+
+            const sectionId = this.getAttribute('data-section');
+
+            if (sectionId === 'all') {
+                // Dashboard mode: show all sections
+                sections.forEach(sec => sec.style.display = 'block');
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            } else {
+                // Tab mode: isolate one section
+                sections.forEach(sec => {
+                    if (sec.getAttribute('data-section') === sectionId) {
+                        sec.style.display = 'block';
+                        // Trigger Plotly resize for charts inside this newly visible section
+                        const charts = sec.querySelectorAll('.plotly-chart');
+                        charts.forEach(chart => {
+                            if (window.Plotly && chart.data) {
+                                Plotly.Plots.resize(chart);
+                            }
+                        });
+                    } else {
+                        sec.style.display = 'none';
+                    }
+                });
+                window.scrollTo({ top: 0, behavior: 'instant' });
             }
+
             // Close mobile sidebar
-            document.getElementById('sidebar').classList.remove('open');
+            const sidebar = document.getElementById('sidebar');
+            if (sidebar) sidebar.classList.remove('open');
         });
     });
 
-    // Intersection Observer for active nav highlighting
-    if (sections.length > 0 && 'IntersectionObserver' in window) {
-        const observer = new IntersectionObserver(function(entries) {
-            entries.forEach(function(entry) {
-                if (entry.isIntersecting) {
-                    const sectionId = entry.target.getAttribute('data-section');
-                    navLinks.forEach(function(link) {
-                        link.classList.remove('active');
-                        if (link.getAttribute('data-section') === sectionId) {
-                            link.classList.add('active');
-                        }
-                    });
-                }
-            });
-        }, {
-            rootMargin: '-20% 0px -70% 0px',
-            threshold: 0
-        });
-
-        sections.forEach(function(section) {
-            observer.observe(section);
-        });
-    }
-
-    // Set first nav link active by default
-    if (navLinks.length > 0) {
-        navLinks[0].classList.add('active');
-    }
+    // We no longer need the IntersectionObserver because the click event manages the active state.
 })();
 
 // ── Fade-in Animation on Scroll ──
