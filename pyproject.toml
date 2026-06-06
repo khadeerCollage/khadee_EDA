@@ -3,12 +3,13 @@ requires = ["setuptools>=61.0", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "khadee-eda"
-version = "1.0.3"
+name = "k-eda"
+version = "1.0.6"
 description = "Deep Insights EDA — Comprehensive data profiling with global AI techniques"
 readme = "README.md"
-license = {text = "MIT"}
+license = {text = "Proprietary / All Rights Reserved"}
 requires-python = ">=3.8"
 
 [tool.setuptools.packages.find]
-include = ["khadee_eda*"]
+where = ["."]
+include = ["k_eda*"]

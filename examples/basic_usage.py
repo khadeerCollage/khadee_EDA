@@ -1,8 +1,8 @@
 """
-Khadee EDA — Basic Usage Example
+K-EDA — Basic Usage Example
 ==================================
 """
-from khadee_eda import ProfileReport
+from k_eda import ProfileReport
 
 # ── Example 1: From CSV file ──
 # report = ProfileReport("train.csv", title="Train Dataset Analysis")
@@ -39,7 +39,7 @@ df.loc[np.random.choice(n, 20, replace=False), "department"] = np.nan
 df = pd.concat([df, df.sample(15, random_state=42)], ignore_index=True)
 
 print("=" * 60)
-print("  Khadee EDA — Generating Full Report")
+print("  K-EDA — Generating Full Report")
 print("=" * 60)
 
 # Generate full report (ALL sections, ALL techniques)

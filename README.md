@@ -1,14 +1,14 @@
-# 🔬 Khadee EDA — Deep Insights Data Profiling & Cleaning
+# 🔬 K-EDA — Deep Insights Data Profiling & Cleaning
 
 [![Python Version](https://img.shields.io/badge/python-3.8%2B-blue.svg)](https://www.python.org/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Build Status](https://img.shields.io/badge/build-passing-brightgreen.svg)]()
 [![Package Size](https://img.shields.io/badge/wheel--size-~85_KB-blueviolet.svg)]()
 
-`khadee-eda` is a next-generation, high-performance exploratory data analysis (EDA) and data cleaning library. It generates **stunning, glassmorphism-themed interactive HTML profiling reports** from any dataset and provides a robust, lightweight suite of cleaning tools equivalent to `dataprep.clean`.
+`k-eda` is a next-generation, high-performance exploratory data analysis (EDA) and data cleaning library. It generates **stunning, glassmorphism-themed interactive HTML profiling reports** from any dataset and provides a robust, lightweight suite of cleaning tools equivalent to `dataprep.clean`.
 
 > [!TIP]
-> **Learning Data Science & EDA?** We have created a comprehensive, beginner-friendly **[Learning & Reference Guide](file:///c:/Users/USER/Desktop/khadee_EDA/LEARNING_GUIDE.md)** explaining all standard library functions (NumPy, Pandas, SciPy, Scikit-Learn) and advanced regional statistics used in this project!
+> **Learning Data Science & EDA?** We have created a comprehensive, beginner-friendly **[Learning & Reference Guide](file:///c:/Users/USER/Desktop/k_eda/LEARNING_GUIDE.md)** explaining all standard library functions (NumPy, Pandas, SciPy, Scikit-Learn) and advanced regional statistics used in this project!
 
 ---
 
@@ -18,7 +18,7 @@
 Auto-detects and loads data from CSV, Excel, JSON, Parquet, SQLite, and 10+ other formats.
 
 ```python
-from khadee_eda import ProfileReport
+from k_eda import ProfileReport
 
 # Method A: Direct one-liner from file path
 report = ProfileReport("train.csv", title="E-Commerce Analysis")
@@ -31,11 +31,11 @@ report = ProfileReport(df, title="Customer Profiles")
 report.to_html("report.html")
 ```
 
-### 2. High-Performance Data Cleaning (`khadee_eda.clean`)
+### 2. High-Performance Data Cleaning (`k_eda.clean`)
 Direct, unified API for cleaning, standardizing, and preparing data (a lightweight alternative to `dataprep.clean`).
 
 ```python
-from khadee_eda import clean
+from k_eda import clean
 
 # Clean column headers (standardize to snake_case, PascalCase, camelCase, etc.)
 df_clean = clean.clean_headers(df, case="snake")
@@ -88,7 +88,7 @@ The **Advanced Stats** section includes 4 distinct regional analytical philosoph
 
 ## 📂 Supported Formats
 
-No need to write separate loading code. `khadee-eda` automatically detects your dataset extension and uses optimized engines to parse it:
+No need to write separate loading code. `k-eda` automatically detects your dataset extension and uses optimized engines to parse it:
 
 | Format | Extensions | Parser |
 | :--- | :--- | :--- |
@@ -104,7 +104,7 @@ No need to write separate loading code. `khadee-eda` automatically detects your 
 
 ## 💾 Package Footprint & Download Size
 
-Unlike heavier packages that bundle thick C++ binaries, `khadee-eda` is designed to be **incredibly lightweight** and fast to download.
+Unlike heavier packages that bundle thick C++ binaries, `k-eda` is designed to be **incredibly lightweight** and fast to download.
 
 ### 1. Download Size (Pip / UV)
 * **Wheel Size (`.whl`)**: **~85 KB**
@@ -133,7 +133,7 @@ If your machine already has standard data science packages (like `pandas`, `nump
 Save compute time and reduce HTML sizes for large datasets by only rendering the sections or techniques you need:
 
 ```python
-from khadee_eda import ProfileReport
+from k_eda import ProfileReport
 
 # Profile only Specific Sections
 report = ProfileReport(
@@ -152,9 +152,9 @@ report = ProfileReport(
 
 ## 💎 Design & Visual Performance Excellence
 
-* **Glassmorphism Dark Theme**: Standard EDA reports often look like boring 2010 tables. `khadee-eda` features a high-end, dark glassmorphism dashboard with neon accents, dynamic hover states, and smooth CSS micro-animations.
+* **Glassmorphism Dark Theme**: Standard EDA reports often look like boring 2010 tables. `k-eda` features a high-end, dark glassmorphism dashboard with neon accents, dynamic hover states, and smooth CSS micro-animations.
 * **Instant PDF Export**: Features a beautiful floating "Download PDF" button that triggers browser printing. The custom media print styles automatically expand all hidden column cards, expand all tabs, hide navigational elements/dropdowns, and switch to a crisp ink-saving light template for a clean, professional corporate report.
-* **WebGL Crash Mitigation**: Rendering dozens of ScatterGL plots on a single page causes modern browsers to exceed their WebGL context limit, crash, and display blank charts. `khadee-eda` compiles Scatter plots to optimized vector SVG path strings, ensuring **100% chart rendering reliability** without sacrificing interactive zoom or hover features.
+* **WebGL Crash Mitigation**: Rendering dozens of ScatterGL plots on a single page causes modern browsers to exceed their WebGL context limit, crash, and display blank charts. `k-eda` compiles Scatter plots to optimized vector SVG path strings, ensuring **100% chart rendering reliability** without sacrificing interactive zoom or hover features.
 * **Smart Dropdown Selectors**: Instead of scrolling endlessly through dozens of columns, the report includes a dynamic select element to view one variable card at a time, instantly resizing the embedded Plotly chart to prevent layout distortions.
 * **Copyable Preprocessing Recommender**: When the library suggests cleaning operations (e.g., standardizing headers or imputing values), it displays a syntax-highlighted code block with a one-click copy button, generating context-aware code ready for your pipeline.
 
@@ -162,11 +162,11 @@ report = ProfileReport(
 
 ## 📦 Installation
 
-To install `khadee-eda` in development mode locally:
+To install `k-eda` in development mode locally:
 
 ```bash
-git clone https://github.com/khadee/khadee-eda.git
-cd khadee_EDA
+git clone https://github.com/khadee/k-eda.git
+cd k_eda
 pip install -e .
 ```
 

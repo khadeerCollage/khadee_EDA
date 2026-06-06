@@ -1,4 +1,4 @@
-# 🎓 Khadee EDA Learning & Reference Guide
+# 🎓 K-EDA Learning & Reference Guide
 
 Welcome! This guide is designed to help you understand **every single function, mathematical formula, library method (Pandas, NumPy, SciPy, Scikit-Learn, Plotly), and regional analytical technique** used in this project. 
 
@@ -8,7 +8,7 @@ Whether you are learning Exploratory Data Analysis (EDA) or looking to understan
 
 ## 📂 Table of Contents
 1. [Core Scientific Libraries Deep-Dive (NumPy, Pandas, SciPy, Scikit-Learn)](#1-core-scientific-libraries-deep-dive)
-2. [Khadee EDA Core Architecture & Functions](#2-khadee-eda-core-architecture--functions)
+2. [K-EDA Core Architecture & Functions](#2-k-eda-core-architecture--functions)
 3. [Explaining the Global Analytical Techniques (US, India, Japan, China)](#3-explaining-the-global-analytical-techniques)
 4. [Downcasting & Memory Optimization Explained](#4-downcasting--memory-optimization-explained)
 
@@ -27,7 +27,7 @@ Pandas is used for data structuring, loading, and fast vector aggregations.
 - **Code Example**:
   ```python
   import pandas as pd
-  df = pd.DataFrame({"names": ["Khadee", "Agent"], "scores": [95, 100]})
+  df = pd.DataFrame({"names": ["K-EDA", "Agent"], "scores": [95, 100]})
   print(df.memory_usage(deep=True))
   ```
 - **Output**:
@@ -252,7 +252,7 @@ Scikit-Learn provides machine learning models and clustering utilities.
 
 ---
 
-## 2. Khadee EDA Core Architecture & Functions
+## 2. K-EDA Core Architecture & Functions
 
 This section documents the internal modules of the library, explaining what each function does, how to use it, and what it returns.
 
@@ -275,7 +275,7 @@ graph TD
 - **Purpose**: Dynamically detects the format of a file path (or accepts a Pandas DataFrame) and parses it using the correct reader engine.
 - **Code Usage**:
   ```python
-  from khadee_eda.loader import load_dataset
+  from k_eda.loader import load_dataset
   df, meta = load_dataset("data.parquet")
   print("Loaded file format:", meta["file_format"])
   ```
@@ -291,7 +291,7 @@ graph TD
   - `unique_id`: Unique identifiers (index columns).
 - **Code Usage**:
   ```python
-  from khadee_eda.type_detector import detect_types
+  from k_eda.type_detector import detect_types
   import pandas as pd
   df = pd.DataFrame({"A": [1, 2, 3], "B": ["X", "X", "X"]})
   print(detect_types(df))
@@ -303,7 +303,7 @@ graph TD
 
 ---
 
-### 🧼 B. Data Cleaning Module (`khadee_eda.clean`)
+### 🧼 B. Data Cleaning Module (`k_eda.clean`)
 
 These functions provide a complete API for preparing data.
 
@@ -312,7 +312,7 @@ These functions provide a complete API for preparing data.
 - **Options**: `snake`, `camel`, `pascal`, `upper`, `lower`.
 - **Code Example**:
   ```python
-  from khadee_eda.clean import clean_headers
+  from k_eda.clean import clean_headers
   import pandas as pd
   df = pd.DataFrame({"First Name!": [1], "last-name": [2]})
   print(clean_headers(df, case="camel").columns)
@@ -327,7 +327,7 @@ These functions provide a complete API for preparing data.
 - **Strategies**: `mean`, `median`, `mode`, `constant`, `drop`.
 - **Code Example**:
   ```python
-  from khadee_eda.clean import clean_missing
+  from k_eda.clean import clean_missing
   import pandas as pd, numpy as np
   df = pd.DataFrame({"A": [1, 2, np.nan, 4]})
   print(clean_missing(df, strategy="median")["A"].tolist())
@@ -342,7 +342,7 @@ These functions provide a complete API for preparing data.
 - **Strategies**: `clip` (winsorize to upper/lower bounds) or `drop` (delete outlier rows).
 - **Code Example**:
   ```python
-  from khadee_eda.clean import clean_outliers
+  from k_eda.clean import clean_outliers
   import pandas as pd
   df = pd.DataFrame({"A": [1, 2, 3, 100]}) # 100 is an outlier
   print(clean_outliers(df, method="iqr", strategy="clip")["A"].tolist())
@@ -354,7 +354,7 @@ These functions provide a complete API for preparing data.
 
 ---
 
-### ⚙️ C. Analysis Engines (`khadee_eda.engines`)
+### ⚙️ C. Analysis Engines (`k_eda.engines`)
 
 These modules perform the underlying mathematical and statistical calculations.
 

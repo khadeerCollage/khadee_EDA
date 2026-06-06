@@ -4,17 +4,17 @@ with open("README.md", "r", encoding="utf-8") as fh:
     long_description = fh.read()
 
 setup(
-    name="khadee-eda",
-    version="1.0.3",
+    name="k-eda",
+    version="1.0.6",
     author="Khadee",
     description="Deep Insights EDA — Comprehensive data profiling with global AI techniques",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://github.com/khadee/khadee-eda",
+    url="https://github.com/khadee/k-eda",
     packages=find_packages(),
     include_package_data=True,
     package_data={
-        "khadee_eda": [
+        "k_eda": [
             "assets/*.css",
             "assets/*.js",
             "renderers/templates/*.html",
@@ -33,7 +33,7 @@ setup(
     ],
     classifiers=[
         "Programming Language :: Python :: 3",
-        "License :: OSI Approved :: MIT License",
+        "License :: Other/Proprietary License",
         "Operating System :: OS Independent",
         "Topic :: Scientific/Engineering :: Information Analysis",
         "Topic :: Scientific/Engineering :: Visualization",
