@@ -134,3 +134,38 @@ function showVariableCard(colId) {
     }
 }
 
+// ── Emoji Polishing ──
+(function() {
+    function polishEmojis() {
+        // 1. Sidebar Nav Links
+        document.querySelectorAll('.nav-link').forEach(el => {
+            const text = el.innerHTML;
+            const emojiRegex = /^([\p{Emoji_Presentation}\p{Emoji}\u200d]+)\s*/u;
+            const match = text.match(emojiRegex);
+            if (match) {
+                const emoji = match[1];
+                const rest = text.substring(match[0].length);
+                el.innerHTML = `<span class="emoji-badge">${emoji}</span><span class="nav-text">${rest}</span>`;
+            }
+        });
+
+        // 2. Card Titles and Section Titles (if any start with emojis)
+        document.querySelectorAll('.card-title, .section-title').forEach(el => {
+            const text = el.innerHTML;
+            const emojiRegex = /^([\p{Emoji_Presentation}\p{Emoji}\u200d]+)\s*/u;
+            const match = text.match(emojiRegex);
+            if (match) {
+                const emoji = match[1];
+                const rest = text.substring(match[0].length);
+                el.innerHTML = `<span class="title-emoji-badge">${emoji}</span><span class="title-text">${rest}</span>`;
+            }
+        });
+    }
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', polishEmojis);
+    } else {
+        polishEmojis();
+    }
+})();
+
