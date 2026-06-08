@@ -5,7 +5,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setup(
     name="k-eda",
-    version="1.0.6",
+    version="1.0.7",
     author="Khadee",
     description="Deep Insights EDA — Comprehensive data profiling with global AI techniques",
     long_description=long_description,

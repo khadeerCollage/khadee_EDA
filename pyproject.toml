@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "k-eda"
-version = "1.0.6"
+version = "1.0.7"
 description = "Deep Insights EDA — Comprehensive data profiling with global AI techniques"
 readme = "README.md"
 license = {text = "Proprietary / All Rights Reserved"}
